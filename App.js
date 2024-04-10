@@ -10,8 +10,16 @@ import AssignmentRoutes from "./Kanbas/assignments/routes.js";
 import mongoose from "mongoose";
 import UserRoutes from "./Kanbas/users/routes.js";
 
-mongoose.connect("mongodb://127.0.0.1:27017/kanbas");
-const app = express();
+const CONNECTION_STRING = process.env.DB_CONNECTION_STRING || 'mongodb://127.0.0.1:27017/kanbas'
+mongoose.connect(CONNECTION_STRING);
+const app = express()
+app.use(express.json());
+
+app.use(cors({
+    credentials: true,  // support cookies
+    origin: process.env.FRONTEND_URL
+}));
+
 const sessionOptions = {
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -27,7 +35,6 @@ sessionOptions.cookie = {
 }
 app.use(session(sessionOptions));
       
-app.use(express.json());
 ModuleRoutes(app);
 CourseRoutes(app);
 AssignmentRoutes(app);
