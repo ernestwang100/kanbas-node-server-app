@@ -18,7 +18,7 @@ function AssignmentRoutes(app) {
         res.sendStatus(200);
       });
     
-    app.post("/api/modules/:mid/assignments", (req, res) => {
+    app.post("/api/courses/:mid/assignments", (req, res) => {
         const { mid } = req.params;
         const newAssignment = {
           ...req.body,
@@ -29,7 +29,7 @@ function AssignmentRoutes(app) {
         res.send(newAssignment);
       });
       
-    app.get("/api/modules/:mid/assignments", (req, res) => {
+    app.get("/api/courses/:mid/assignments", (req, res) => {
     const { mid } = req.params;
     const assignments = db.assignments
       .filter((a) => a.module === mid);
