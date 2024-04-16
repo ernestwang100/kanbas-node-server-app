@@ -5,22 +5,24 @@ export default function UserRoutes(app) {
     const user = await dao.createUser(req.body);
     res.json(user);
   };
-  app.post("/api/users", createUser);
+  
   const deleteUser = async (req, res) => {
     const status = await dao.deleteUser(req.params.userId);
     res.json(status);
   };
   const findAllUsers = async (req, res) => {
+    console.log('findAllUsers')
     const { role } = req.query;
     if (role) {
       const users = await dao.findUsersByRole(role);
       res.json(users);
       return;
     }
+    console.log('findAllUsers [000]')
     const users = await dao.findAllUsers();
     res.json(users);
   };
-  app.get("/api/users", findAllUsers);
+  
   const findUserById = async (req, res) => {
     const user = await dao.findUserById(req.params.userId);
     res.json(user);
@@ -41,16 +43,19 @@ export default function UserRoutes(app) {
     req.session["currentUser"] = currentUser;
     res.json(currentUser);
   };
-  app.post("/api/users/signup", signup);
-  const signin = async (req, res) => {     
+  
+  const signin = async (req, res) => {
+    console.log('signin')
     const { username, password } = req.body;
-  const currentUser = await dao.findUserByCredentials(username, password);
-  if (currentUser) {
-    req.session["currentUser"] = currentUser;
-  res.json(currentUser);
-} else {
-  res.sendStatus(401);
-}
+    console.log(username, password)
+    const currentUser = await dao.findUserByCredentials(username, password);
+    console.log(currentUser)
+    if (currentUser) {
+      req.session["currentUser"] = currentUser;
+      res.json(currentUser);
+    } else {
+      res.sendStatus(401);
+    }
 
 };
 const signout = (req, res) => {
